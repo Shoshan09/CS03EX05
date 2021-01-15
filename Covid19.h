@@ -24,5 +24,5 @@ private:
 	float m_R;
 	int m_bioMoleculeNum;
 	bool m_vaccine;
-	char* m_serial[20];
+	char* m_serial;
 };
