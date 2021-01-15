@@ -2,11 +2,11 @@
 #include "CovidGB.h"
 #include "CovidSA.h"
 
-class CovidKZ : public virtual CovidGB, public virtual CovidSA
+class CovidKZ : public CovidGB, public CovidSA
 {
 public:
 	CovidKZ();
-	CovidKZ(const char* genSeq);
+	CovidKZ(float R, int bio, bool vac, const char* serial, float lungFunction, const char* originGB, float liverFunc, const char* originSA, const char* genSeq);
 	~CovidKZ() { delete[] m_geneticSequence; }
 
 	int setGenSeq(const char* geneticSequence);
@@ -16,5 +16,5 @@ public:
 	void print();
 
 private:
-	char* m_geneticSequence[20];
+	char* m_geneticSequence;
 };
