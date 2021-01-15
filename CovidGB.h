@@ -1,12 +1,12 @@
 #pragma once
 #include "Covid19.h"
 
-class CovidGB : public Covid19
+class CovidGB : virtual public Covid19
 {
 public:
 	CovidGB();
-	CovidGB(float lungFunction, const char* origin);
-	~CovidGB() { delete[] m_origin }
+	CovidGB(float R, int bio, bool vac, const char* serial, float lungFunction, const char* origin);
+	~CovidGB() { delete[] m_origin; }
 
 	int setLungFunction(float lungFunction);
 	int setOrigin(const char* origin);
