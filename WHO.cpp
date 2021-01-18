@@ -5,13 +5,16 @@
 
 WHO::WHO():
 	m_pandemicArray(NULL),
+	m_arraySize(0),
 	m_workCountry(NULL),
 	m_totalPopulation(0),
 	m_totalSick(0),
 	m_differentViruses(0)
 {}
 
-WHO::WHO(const char* workCountry, int totalPop, int totalSick, int DiffViruse) :
+WHO::WHO(const char* workCountry, int totalPop, int totalSick, int DiffViruse,Covid19** panArr,int size) :
+	m_pandemicArray(panArr),
+	m_arraySize(size),
 	m_totalPopulation(totalPop),
 	m_totalSick(totalSick),
 	m_differentViruses(DiffViruse)
@@ -31,23 +34,39 @@ WHO::WHO(const WHO& other)
 		m_pandemicArray = NULL;
 	else
 	{
+		m_arraySize = other.m_arraySize;
 		setCovidArray(other.m_pandemicArray, other.m_arraySize);
 	}
+	
+	m_workCountry = new char[strlen(other.m_workCountry)+1];
+	strcpy(m_workCountry, other.m_workCountry);
 
 	m_differentViruses = other.m_differentViruses;
 	m_totalPopulation = other.m_totalPopulation;
 	m_totalSick = other.m_totalSick;
+
 }
 
-WHO::~WHO() {}
+WHO::~WHO() 
+{
+	delete[] m_workCountry;
+}
 
+
+//_____NOT SURE!!!!!!______________//
 int WHO::setCovidArray(Covid19** panArray,int size)
 {
+	if (size == 0)
+	{
+		m_pandemicArray = NULL;
+		return -1;
+	}
+
 	m_pandemicArray = new Covid19 * [size];
 	m_arraySize = size;
 
 
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < m_arraySize; i++)
 	{
 		if (typeid(*panArray[i]) == typeid(Covid19))
 		{
@@ -73,6 +92,7 @@ int WHO::setCovidArray(Covid19** panArray,int size)
 			m_pandemicArray[i] = new CovidKZ(*cov);
 		}
 	}
+	return 1;
 }
 
 
@@ -143,9 +163,30 @@ int WHO::countViruses()
 	return 1;
 } 
 
-Covid19** WHO::addToArray(Covid19 cov)
-{}
+void WHO::operator=(const WHO& other)
+{
+	if (other.m_pandemicArray == NULL)
+		m_pandemicArray = NULL;
+	else
+	{
+		setCovidArray(other.m_pandemicArray, other.m_arraySize);
+	}
 
+	m_differentViruses = other.m_differentViruses;
+	m_totalPopulation = other.m_totalPopulation;
+	m_totalSick = other.m_totalSick;
+}
+
+
+
+
+// ______________NOT READY!!______________//
+
+//Covid19** WHO::addToArray(Covid19 cov)
+//{}
+
+
+//______________NOT SURE!!!___________________//
 
 int WHO::changeKZGenSeq(int index, const char* genSeq)
 {
@@ -161,31 +202,46 @@ int WHO::changeKZGenSeq(int index, const char* genSeq)
 		return -1;
 	}
 
-	if (typeid(m_pandemicArray[index]) == typeid(CovidKZ))
+	else if (typeid(m_pandemicArray[index]) == typeid(CovidKZ))
 	{
-		CovidKZ cov = dynamic_cast<Covid19*>(m_pandemicArray[index]);
+		CovidKZ* Z = dynamic_cast<CovidKZ*>(m_pandemicArray[index]);
+		Z->setGenSeq(genSeq);
+		m_pandemicArray[index] = new CovidKZ(*Z);
 	}
+	return 1;
 }
 
-void WHO::operator=(const WHO& other)
-{
-
-}
-
+//_______________NOT SURE!!!________________//
 void WHO::print()
 {
-	for (int i = 0; i <= sizeof(m_pandemicArray); i++)
+	for (int i = 0; i <= m_arraySize; i++)
 	{
 		if (typeid(m_pandemicArray[i]) == typeid(Covid19))
-		{
-			m_pandemicArray[i]->print();
-		}
+		m_pandemicArray[i]->print();
 
 		if (typeid(m_pandemicArray[i]) == typeid(CovidGB))
 		{
-			
+			CovidGB* cov = dynamic_cast<CovidGB*>(m_pandemicArray[i]);
+			cov->print();
+		}
+
+		if (typeid(m_pandemicArray[i]) == typeid(CovidSA))
+		{
+			CovidSA* cov = dynamic_cast<CovidSA*>(m_pandemicArray[i]);
+			cov->print();
+		}
+
+		if (typeid(m_pandemicArray[i]) == typeid(CovidKZ))
+		{
+			CovidKZ* cov = dynamic_cast<CovidKZ*>(m_pandemicArray[i]);
+			cov->print();
 		}
 	}
+
+	cout << "Work country: " << getCountry() << ", " <<
+		"Different Viruses: " << getDiffViruses() << ", " <<
+		"total population: " << getTotalPop() << ", " <<
+		"total sick: " << getTotalSick() << endl;
 }
 
 ostream& operator<<(ostream& os, WHO& who)
