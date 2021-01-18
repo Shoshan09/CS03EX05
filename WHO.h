@@ -10,7 +10,7 @@ class WHO
 {
 public:
 	WHO();
-	WHO(const char* workCountry, int totalPop, int totalSick, int DiffViruse);
+	WHO(const char* workCountry, int totalPop, int totalSick, int DiffViruse, Covid19** panArr, int size);
 	WHO(const WHO& other);
 	~WHO();
 	
