@@ -29,7 +29,7 @@ public:
 	Covid19** getPandemicArray();
 
 	//different functions
-	Covid19** addToArray(Covid19 cov);
+	Covid19** addToArray(Covid19* cov);
 	int countViruses(); //functinon to count number of different viruses in the country and change the variable m_differentViruses accordingly
 	int changeKZGenSeq(int index, const char* genSeq);
 
